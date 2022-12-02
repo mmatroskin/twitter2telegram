@@ -1,0 +1,11 @@
+# Python byte code
+*.pyc
+
+# Dirs
+/.idea
+/venv
+
+# Files
+/app_data/logs/*.*
+/main_app/.private/private.ini
+.env
