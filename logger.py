@@ -57,6 +57,7 @@ def set_logging_config(file_name: str):
 
 
 def check_file(file_name: str):
+    fh = None
     try:
         fh = open(file_name, 'r')
     except FileNotFoundError:
