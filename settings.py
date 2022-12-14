@@ -1,0 +1,109 @@
+from os.path import join, exists
+from pathlib import Path
+from os import getenv
+
+from dotenv import load_dotenv
+
+from config import get_config
+
+
+DEV_MODE = bool(int(getenv('DEV_MODE', 0)))
+
+ROOT_DIR = Path(__file__).resolve().parent
+DATA_DIR = r'app_data'
+CONFIG = r'app.ini'
+PRIVATE_CONFIG = r'.private.ini'
+HELP_DATA = r'help_data'
+ANS_BASE = r'answers_base'
+OTHER_DATA = 'other_msg'
+LOG_FILE = join(ROOT_DIR, DATA_DIR, 'logs', 'log.txt')
+ERROR_MSG = r'Application internal error!'
+
+dotenv_path = join(ROOT_DIR, '.env')
+if exists(dotenv_path):
+    load_dotenv(dotenv_path)
+
+config = get_config(join(ROOT_DIR, CONFIG))
+
+# parsers settings
+# TARGET = config.get('parsers', 'target')
+DELTA = config.getint('parser', 'min_delta')
+
+# webserver settings
+HOST = config.get('app', 'host')
+PORT = int(config.get('app', 'port'))
+ON_WEB = bool(int(getenv('ON_WEB', 0)))
+if ON_WEB:
+    PORT = int(getenv('PORT'))
+
+# sentry logging settings
+USE_SENTRY = bool(int(config.get('main', 'use_sentry')))
+SENTRY_URL = getenv('SENTRY_URL', '')
+if USE_SENTRY and not SENTRY_URL:
+   print('You have forgot to set SENTRY_URL')
+
+# bot settings
+BOT_TOKEN = getenv('BOT_TOKEN')
+# if not BOT_TOKEN:
+#     print('You have forgot to set BOT_TOKEN')
+#     quit()
+
+BOT_ADMIN = getenv('BOT_ADMIN')
+# if BOT_ADMIN:
+#     BOT_ADMIN = int(BOT_ADMIN)
+# if not BOT_ADMIN:
+#     print('You have forgot to set BOT_ADMIN')
+#     quit()
+
+BOT_NAME = getenv('BOT_NAME')
+# if not BOT_NAME:
+#     print('You have forgot to set BOT_NAME')
+#     quit()
+
+TWITTER_TOKEN = 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA'
+MAIN_JS_URL = 'https://abs.twimg.com/responsive-web/client-web/main.e46e1035.js'
+
+# webhook settings
+USE_WEBHOOK = bool(int(config.get('main', 'use_webhook')))
+PUBLIC_APP_NAME = getenv('PUBLIC_APP_NAME')
+if ON_WEB and not PUBLIC_APP_NAME:
+    print('You have forgot to set PUBLIC_APP_NAME')
+    quit()
+WEBHOOK_HOST = f'https://{PUBLIC_APP_NAME}' if USE_WEBHOOK else None
+WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}' if USE_WEBHOOK else None
+WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}' if USE_WEBHOOK else None
+
+# misc
+DONATE_ENABLED = bool(int(getenv('DONATE_ENABLED', 0)))
+DONATE_URL = getenv('DONATE_URL', '')
+# if not DONATE_URL:
+#     print('You have forgot to set DONATE_URL')
+#     quit()
+
+HELP_QUERY = config.get("misc", "help_query")
+DONATE_QUERY = config.get("misc", "donate_query")
+STAT_COMMAND = config.get("misc", "stat_command")
+LOG_COMMAND = config.get("misc", "log_command")
+START_COMMAND = f'/{config.get("misc", "start_command")}'
+DONATE_COMMAND = config.get("misc", "donate_command")
+BUG_COMMAND = config.get("misc", "bug_command")
+SUBSCRIBE_COMMAND = config.get("misc", "subscribe_command")
+UNSUBSCRIBE_COMMAND = config.get("misc", "unsubscribe_command")
+LIST_COMMAND = config.get("misc", "list_command")
+GET_COMMAND = config.get("misc", "get_command")
+
+TIME_OUT = 1
+
+DEMO_COUNT = 5
+
+SEP = ' '
+STATUS_OK = 200
+
+SEP_MSG = '''
+'''
+START_POS_BUG_MSG = 2
+START_POS_REPORT_MSG = 3
+
+# PARSE_LIST = [
+#     'https://fill.com.ua/gif'
+# ]
