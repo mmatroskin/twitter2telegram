@@ -7,5 +7,5 @@
 
 # Files
 /app_data/logs/*.*
-/main_app/.private/private.ini
+.private/.private.ini
 .env
