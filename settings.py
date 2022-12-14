@@ -65,13 +65,12 @@ MAIN_JS_URL = 'https://abs.twimg.com/responsive-web/client-web/main.e46e1035.js'
 
 # webhook settings
 USE_WEBHOOK = bool(int(getenv('USE_WEBHOOK', 0)))
-PUBLIC_APP_NAME = getenv('PUBLIC_APP_NAME')
-if ON_WEB and not PUBLIC_APP_NAME:
-    print('You have forgot to set PUBLIC_APP_NAME')
+PUBLIC_APP_URL = getenv('PUBLIC_APP_URL')
+if ON_WEB and not PUBLIC_APP_URL:
+    print('You have forgot to set PUBLIC_APP_URL')
     quit()
-webhook_host = f'https://{PUBLIC_APP_NAME}' if USE_WEBHOOK else None
 WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}' if USE_WEBHOOK else None
-WEBHOOK_URL = f'{webhook_host}{WEBHOOK_PATH}' if USE_WEBHOOK else None
+WEBHOOK_URL = f'{PUBLIC_APP_URL}{WEBHOOK_PATH}' if USE_WEBHOOK else None
 
 # misc
 DONATE_ENABLED = bool(int(getenv('DONATE_ENABLED', 0)))
