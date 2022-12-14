@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 from os.path import join
 from time import sleep
