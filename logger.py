@@ -13,6 +13,13 @@ def get_logger(file_name: str, name: str) -> logging.Logger:
 
     f = logging.Formatter(f_s, datefmt='%d-%m-%Y %H:%M:%S')
 
+    try:
+        fh = open(file_name, 'r')
+    except FileNotFoundError:
+        fh = open(file_name, 'w')
+    finally:
+        fh.close()
+
     f_handler = TimedRotatingFileHandler(filename=file_name,
                                          encoding='utf-8',
                                          when='midnight',
