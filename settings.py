@@ -30,17 +30,17 @@ config = get_config(join(ROOT_DIR, CONFIG))
 DELTA = config.getint('parser', 'min_delta')
 
 # webserver settings
-HOST = config.get('app', 'host')
-PORT = int(config.get('app', 'port'))
+HOST = config.get('main', 'host')
+PORT = int(config.get('main', 'port'))
 ON_WEB = bool(int(getenv('ON_WEB', 0)))
 if ON_WEB:
     PORT = int(getenv('PORT'))
 
 # sentry logging settings
-USE_SENTRY = bool(int(config.get('main', 'use_sentry')))
+USE_SENTRY = bool(int(getenv('USE_SENTRY', 0)))
 SENTRY_URL = getenv('SENTRY_URL', '')
 if USE_SENTRY and not SENTRY_URL:
-   print('You have forgot to set SENTRY_URL')
+    print('You have forgot to set SENTRY_URL')
 
 # bot settings
 BOT_TOKEN = getenv('BOT_TOKEN')
@@ -64,14 +64,14 @@ TWITTER_TOKEN = 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4p
 MAIN_JS_URL = 'https://abs.twimg.com/responsive-web/client-web/main.e46e1035.js'
 
 # webhook settings
-USE_WEBHOOK = bool(int(config.get('main', 'use_webhook')))
+USE_WEBHOOK = bool(int(getenv('USE_WEBHOOK', 0)))
 PUBLIC_APP_NAME = getenv('PUBLIC_APP_NAME')
 if ON_WEB and not PUBLIC_APP_NAME:
     print('You have forgot to set PUBLIC_APP_NAME')
     quit()
-WEBHOOK_HOST = f'https://{PUBLIC_APP_NAME}' if USE_WEBHOOK else None
+webhook_host = f'https://{PUBLIC_APP_NAME}' if USE_WEBHOOK else None
 WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}' if USE_WEBHOOK else None
-WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}' if USE_WEBHOOK else None
+WEBHOOK_URL = f'{webhook_host}{WEBHOOK_PATH}' if USE_WEBHOOK else None
 
 # misc
 DONATE_ENABLED = bool(int(getenv('DONATE_ENABLED', 0)))
