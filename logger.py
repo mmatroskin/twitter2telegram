@@ -10,7 +10,7 @@ from settings import USE_SENTRY, SENTRY_URL
 def get_logger(file_name: str, name: str) -> logging.Logger:
     level = logging.ERROR
     f_s = '%(asctime)s %(filename)s [LINE:%(lineno)d] #%(levelname)s - %(message)s'
-    check_file(file_name)
+    # check_file(file_name)
     f = logging.Formatter(f_s, datefmt='%d-%m-%Y %H:%M:%S')
     f_handler = TimedRotatingFileHandler(filename=file_name,
                                          encoding='utf-8',
@@ -39,7 +39,7 @@ def get_logger(file_name: str, name: str) -> logging.Logger:
 
 
 def set_logging_config(file_name: str):
-    check_file(file_name)
+    # check_file(file_name)
     f_handler = TimedRotatingFileHandler(filename=file_name,
                                          encoding='utf-8',
                                          when='midnight',
