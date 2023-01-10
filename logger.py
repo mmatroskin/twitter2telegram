@@ -8,20 +8,26 @@ from settings import USE_SENTRY, SENTRY_URL
 
 
 def get_logger(file_name: str, name: str) -> logging.Logger:
-    level = logging.ERROR
     f_s = '%(asctime)s %(filename)s [LINE:%(lineno)d] #%(levelname)s - %(message)s'
     # check_file(file_name)
-    f = logging.Formatter(f_s, datefmt='%d-%m-%Y %H:%M:%S')
+    ff = logging.Formatter(f_s, datefmt='%d-%m-%Y %H:%M:%S')
     f_handler = TimedRotatingFileHandler(filename=file_name,
                                          encoding='utf-8',
                                          when='midnight',
                                          backupCount=7)
-    f_handler.setFormatter(f)
-    f_handler.setLevel(level)
+    f_handler.setFormatter(ff)
+    f_handler.setLevel(logging.ERROR)
+
+    s_s = '%(asctime)s #%(levelname)s - %(message)s'
+    sf = logging.Formatter(s_s, datefmt='%d-%m-%Y %H:%M:%S')
+    str_handler = logging.StreamHandler()
+    str_handler.setFormatter(sf)
+    str_handler.setLevel(logging.INFO)
 
     log = logging.getLogger(name)
     log.setLevel(logging.INFO)
     log.addHandler(f_handler)
+    log.addHandler(str_handler)
 
     if USE_SENTRY:
         sentry_sdk.init(
@@ -30,7 +36,7 @@ def get_logger(file_name: str, name: str) -> logging.Logger:
             default_integrations=False
         )
         s_handler = EventHandler(logging.ERROR)
-        s_handler.setFormatter(f)
+        s_handler.setFormatter(ff)
         log.addHandler(s_handler)
 
     log.propagate = False

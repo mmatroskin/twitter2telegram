@@ -4,7 +4,7 @@ from typing import Any
 
 def get_config(filename: str) -> ConfigParser:
     config = ConfigParser()
-    config.read(filename)
+    config.read(filename, encoding='utf-8')
     return config
 
 

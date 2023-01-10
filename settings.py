@@ -29,12 +29,23 @@ config = get_config(join(ROOT_DIR, CONFIG))
 # TARGET = config.get('parsers', 'target')
 DELTA = config.getint('parser', 'min_delta')
 
-# webserver settings
 HOST = config.get('main', 'host')
 PORT = int(config.get('main', 'port'))
 ON_WEB = bool(int(getenv('ON_WEB', 0)))
 if ON_WEB:
     PORT = int(getenv('PORT'))
+
+# webserver settings
+SRV_HOST = config.get('server', 'host')
+SRV_PORT = int(config.get('server', 'port'))
+ON_WEB = bool(int(getenv('ON_WEB', 0)))
+if ON_WEB:
+    SRV_PORT = int(getenv('PORT', SRV_PORT))
+
+MESSAGE_SUCCESS = config.get("messages", "message_success")
+MESSAGE_ERROR = config.get("messages", "message_error")
+MESSAGE_404 = config.get("messages", "message_404")
+MESSAGE_BAD_QUERY = config.get("messages", "message_bad_query")
 
 # sentry logging settings
 USE_SENTRY = bool(int(getenv('USE_SENTRY', 0)))
@@ -60,7 +71,7 @@ BOT_NAME = getenv('BOT_NAME')
 #     print('You have forgot to set BOT_NAME')
 #     quit()
 
-TWITTER_TOKEN = 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA'
+TWITTER_TOKEN = getenv('TWITTER_TOKEN')
 MAIN_JS_URL = 'https://abs.twimg.com/responsive-web/client-web/main.e46e1035.js'
 
 # webhook settings
