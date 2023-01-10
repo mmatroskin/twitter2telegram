@@ -104,7 +104,7 @@ GET_COMMAND = config.get("misc", "get_command")
 
 TIME_OUT = 1
 
-DEMO_COUNT = 5
+DEMO_COUNT = 10
 
 SEP = ' '
 STATUS_OK = 200
