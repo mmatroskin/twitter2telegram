@@ -197,6 +197,10 @@ async def send_media(message: Message, item: Media, msg: str):
                 await send_response(message, f'{msg}{SEP_MSG}Entity: {msg_base_list[6]}')
             file.close()
             del file
+        except TimeoutError as e:
+            logger.error(str(e), exc_info=False)
+            process_error_msg = f'{msg}{SEP_MSG}Entity: Process entity error :('
+            await send_response(message, process_error_msg)
         except Exception as e:
             logger.error(str(e), exc_info=False)
             await send_response(message)

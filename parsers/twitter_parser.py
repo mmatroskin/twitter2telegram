@@ -93,8 +93,10 @@ class Parser:
         # if since_id:
         #     params["since_id"] = str(since_id)
 
-        tweets = self._get_tweets(**params)
         result = []
+        tweets = self._get_tweets(**params)
+        if tweets is None:
+            return result
         for uid, item in tweets.items():
             if not since_id or uid > since_id:
                 item['user_name'] = username
@@ -123,7 +125,7 @@ class Parser:
             return None
         return int(response.json()['data']['user']['rest_id'])
 
-    def _get_tweets(self, **kwargs) -> Dict:
+    def _get_tweets(self, **kwargs) -> Dict | None:
         # route = f'2/timeline/{rest_id}/tweets'
         # route = f'2/timeline/profile/{rest_id}.json?userId={rest_id}&count={self.count}'
         route = f'2/search/adaptive.json'
@@ -135,7 +137,7 @@ class Parser:
             self.logger.error(response.reason)
             return None
         objects = response.json().get('globalObjects')
-        return objects.get('tweets') if objects else []
+        return objects.get('tweets') if objects else {}
 
     def _set_media_blobs(self, tweets: List[Tweet]):
         for i in tweets:
