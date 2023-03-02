@@ -12,7 +12,7 @@ from bot.keyboards.inline.form import get_form_keyboard
 from bot.misc.common import send_response
 from bot.misc.file_read import get_file_entry, get_file_entry_as_list
 from bot.misc.forms import SubscribeForm, UserTweetsWithoutSubscribeForm
-from bot.misc.helpers import standard_notify
+from bot.misc.helpers import standard_notify, extract_cmd_args, username_is_valid, get_tweets, send_tweet
 from logger import get_logger
 from settings import ROOT_DIR, DATA_DIR, LOG_FILE, BOT_ADMIN, OTHER_DATA, HELP_DATA, DONATE_QUERY, \
     DONATE_COMMAND, BUG_COMMAND, SUBSCRIBE_COMMAND, SEP_MSG, START_POS_REPORT_MSG, STAT_COMMAND, LOG_COMMAND, \
@@ -35,9 +35,41 @@ async def process_help_command(message: types.Message):
 
 @dp.message_handler(Command([GET_COMMAND]))
 async def process_get_command(message: types.Message):
-    await UserTweetsWithoutSubscribeForm.username.set()
-    buttons = get_form_keyboard()
-    await message.reply(msg_base_list[2].strip(), reply_markup=buttons)
+    args = extract_cmd_args(message.text)
+    if len(args) != 1:
+        msg = get_file_entry_as_list(join(ROOT_DIR, DATA_DIR, OTHER_DATA))[5] + f' {icons[2].image}'
+        await message.answer(msg, reply_markup=menu)
+    # elif len(args) < 1:
+    #     # old
+    #     await UserTweetsWithoutSubscribeForm.username.set()
+    #     buttons = get_form_keyboard()
+    #     await message.reply(msg_base_list[2].strip(), reply_markup=buttons)
+    else:
+        username = args[0]
+        if username and username[0] == '@':
+            username = username[1:]
+        msg = f'{msg_base_list[3].strip()} {msg_base_list[8].strip()} {icons[2].image}'
+        msg = msg % username
+        tweets = None
+        success = True
+        if username_is_valid(username):
+            await message.answer(msg_base_list[7].strip(), reply_markup=menu)
+            tweets, success = get_tweets(uid=message.from_user.id, username=username)
+        else:
+            msg = f'{msg_base_list[3].strip()} {msg_base_list[9].strip()} {icons[4].image}'
+            msg = msg % username
+        if success and tweets is not None:
+            if not tweets:
+                msg = f'{msg_base_list[3].strip()} {msg_base_list[8].strip()} {icons[2].image}'
+                msg = msg % username
+                await message.answer(msg, reply_markup=menu)
+            else:
+                for item in tweets:
+                    await send_tweet(message, item)
+        else:
+            if not success:
+                msg = msg_base_list[5]
+            await message.answer(msg, reply_markup=menu)
 
 
 @dp.message_handler(Command([SUBSCRIBE_COMMAND]))
@@ -62,7 +94,7 @@ async def process_donate_command(message: types.Message):
 @dp.message_handler(Command([STAT_COMMAND, LOG_COMMAND]))
 async def process_report_command(message: types.Message):
     if message.from_user.id != int(BOT_ADMIN):
-        msg_list = get_file_entry_as_list(join(ROOT_DIR, DATA_DIR, OTHER_DATA))[6:]
+        msg_list = get_file_entry_as_list(join(ROOT_DIR, DATA_DIR, OTHER_DATA))
         user = message.from_user.username if message.from_user.username else "Undefined"
         msg = msg_list[3] % user
         await standard_notify(dp, msg)
