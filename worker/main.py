@@ -4,17 +4,19 @@
 from os.path import join
 from time import sleep
 
-from logger import set_logging_config
+from logger import get_logger
 from parsers.twitter_parser import Parser
 from settings import ROOT_DIR, LOG_FILE, TIME_OUT
 
 
+logger = get_logger(join(ROOT_DIR, LOG_FILE), 'worker_app')
+
+
 def main():
-    set_logging_config(join(ROOT_DIR, LOG_FILE))
-    print('Worker is active')
+    logger.info('Starting worker app')
     while True:
         sleep(TIME_OUT)
-    print('Worker stopped')
+    logger.info('Worker stopped')
     pass
 
 

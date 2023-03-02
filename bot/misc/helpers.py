@@ -63,7 +63,7 @@ def subscribe(uid: int, username: str) -> bool:
     return result
 
 
-def get_tweets(uid: Optional[int], username: Optional[str]) -> Tuple[List[Tweet], bool]:
+def get_tweets(uid: Optional[int], username: Optional[str]) -> Tuple[List[Tweet] | None, bool]:
     """
     Получение N последних твитов
     Parameters
@@ -80,11 +80,13 @@ def get_tweets(uid: Optional[int], username: Optional[str]) -> Tuple[List[Tweet]
         parser = Parser(username)
     except RefreshTokenException as exc:
         logger.error(str(exc))
-        return [], False
+        return None, False
     target_id = parser.get_user_id(username)
+    if not target_id:
+        parser.close_session()
+        return None, True
     since_id = data_srv.get_last_tweet_for_user(uid, target_id)
-    result = parser.get_tweets(username=username, since_id=since_id, demo=data_srv.is_free_user(uid)) \
-        if target_id else []
+    result = parser.get_tweets(username=username, since_id=since_id, demo=data_srv.is_free_user(uid))
     parser.close_session()
     if result:
         data_srv.save_last_tweet_for_user(uid, target_id, result[-1].id, result[-1].created_at)
@@ -220,3 +222,7 @@ def prepare_msg(data: Tweet):
     # msg += f'{SEP_MSG}{SEP_MSG}Source: {data.url}'
 
     return msg
+
+
+def extract_cmd_args(msg: str):
+    return msg.split()[1:]

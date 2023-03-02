@@ -2,7 +2,7 @@ from os.path import join
 
 from aiogram import executor
 
-from logger import get_logger, set_logging_config
+from logger import get_logger
 from settings import USE_WEBHOOK, WEBHOOK_URL, WEBHOOK_PATH, HOST, PORT, ROOT_DIR, LOG_FILE
 from bot.bot import dp, bot, storage
 from bot.misc.helpers import startup_notify
@@ -35,8 +35,7 @@ async def on_shutdown(dp):
 
 
 def main():
-    set_logging_config(join(ROOT_DIR, LOG_FILE))
-
+    logger.info('Starting bot app')
     if USE_WEBHOOK:
         executor.start_webhook(
             dispatcher=dp,

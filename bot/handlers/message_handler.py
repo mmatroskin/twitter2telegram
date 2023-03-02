@@ -66,25 +66,32 @@ async def getting_tweets_handler(message: types.Message, state: FSMContext):
     -------
 
     """
-    msg = f'{msg_base_list[3].strip()} {icons[2].image}'
     tweets = None
+    success = True
     async with state.proxy() as data:
         data['username'] = message.text.strip()
         if data.get('username') and data['username'][0] == '@':
             data['username'] = data['username'][1:]
-        if username_is_valid(data['username']):
-            msg = msg_base_list[3].strip()
-            tweets, success = get_tweets(uid=message.from_user.id, username=data['username'])
     await state.finish()
-    if success:
+    msg = f'{msg_base_list[3].strip()} {msg_base_list[8].strip()} {icons[2].image}'
+    msg = msg % data['username']
+    if username_is_valid(data['username']):
+        await message.answer(msg_base_list[7].strip(), reply_markup=menu)
+        tweets, success = get_tweets(uid=message.from_user.id, username=data['username'])
+    else:
+        msg = f'{msg_base_list[3].strip()} {msg_base_list[9].strip()} {icons[4].image}'
+        msg = msg % data['username']
+    if success and tweets is not None:
         if not tweets:
+            msg = f'{msg_base_list[3].strip()} {msg_base_list[8].strip()} {icons[2].image}'
             msg = msg % data['username']
             await message.answer(msg, reply_markup=menu)
         else:
             for item in tweets:
                 await send_tweet(message, item)
     else:
-        msg = msg_base_list[5]
+        if not success:
+            msg = msg_base_list[5]
         await message.answer(msg, reply_markup=menu)
 
 

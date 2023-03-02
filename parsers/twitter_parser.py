@@ -24,7 +24,7 @@ class Parser:
     _bearer = TWITTER_TOKEN
     _token: str | None = None
     demo_count = DEMO_COUNT
-    count = 40
+    count = 30
     logger = get_logger(join(ROOT_DIR, LOG_FILE), __name__)
 
     def __init__(self, getting_token_with_web=True):
