@@ -19,6 +19,14 @@ echo -e '\e[1m\e[34mRemove existing virtual environment...\e[0m\n'
 
 rm -r ~/apps/twitter2telegram/venv
 
+echo -e '\e[1m\e[34mCloning from source...\e[0m\n'
+
+git checkout release
+
+git clean
+
+git pull origin release
+
 echo -e '\e[1m\e[34mActivate virtual environment...\e[0m\n'
 
 python3 -m venv ~/apps/twitter2telegram/venv
