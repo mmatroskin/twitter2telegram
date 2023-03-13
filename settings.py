@@ -29,18 +29,19 @@ config = get_config(join(ROOT_DIR, CONFIG))
 # TARGET = config.get('parsers', 'target')
 DELTA = config.getint('parser', 'min_delta')
 
+WEB_SERVER_ACTIVE = bool(int(getenv('WEB_SERVER_ACTIVE', 0)))
+ON_WEB = bool(int(getenv('ON_WEB', 0)))
+
 HOST = config.get('main', 'host')
 PORT = int(config.get('main', 'port'))
-ON_WEB = bool(int(getenv('ON_WEB', 0)))
 if ON_WEB:
     PORT = int(getenv('PORT'))
 
 # webserver settings
 SRV_HOST = config.get('server', 'host')
 SRV_PORT = int(config.get('server', 'port'))
-ON_WEB = bool(int(getenv('ON_WEB', 0)))
 if ON_WEB:
-    SRV_PORT = int(getenv('PORT', SRV_PORT))
+    SRV_PORT = int(getenv('SRV_PORT', SRV_PORT))
 
 MESSAGE_SUCCESS = config.get("messages", "message_success")
 MESSAGE_ERROR = config.get("messages", "message_error")
@@ -54,7 +55,7 @@ if USE_SENTRY and not SENTRY_URL:
     print('You have forgot to set SENTRY_URL')
 
 # bot settings
-BOT_TOKEN = getenv('BOT_TOKEN')
+BOT_TOKEN = getenv('TWEET_BOT_TOKEN')
 # if not BOT_TOKEN:
 #     print('You have forgot to set BOT_TOKEN')
 #     quit()
