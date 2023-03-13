@@ -2,7 +2,7 @@ echo -e $PWD
 
 echo -e '\e[1m\e[34mActivate virtual environment...\e[0m\n'
 
-source ~/apps/twitter2telegram/venv/bin/activate
+. ~/apps/twitter2telegram/venv/bin/activate
 
 echo $VIRTUAL_ENV
 
