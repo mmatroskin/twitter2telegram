@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 from os.path import join
 from time import sleep
 
@@ -8,7 +7,7 @@ from bot.main import main as bot_app
 from logger import set_logging_config
 from worker.main import main as worker_app
 from web_app.main import main as web_app
-from settings import TIME_OUT, ROOT_DIR, LOG_FILE
+from settings import TIME_OUT, ROOT_DIR, LOG_FILE, WEB_SERVER_ACTIVE
 
 
 def main():
@@ -17,8 +16,10 @@ def main():
     apps = {
         'worker_app': worker_app,
         'bot_app': bot_app,
-        'web_app': web_app
     }
+
+    if WEB_SERVER_ACTIVE:
+        apps['web_app'] = web_app
 
     service = AppService(apps)
     service.start()

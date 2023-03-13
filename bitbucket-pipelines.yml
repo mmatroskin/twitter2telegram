@@ -22,6 +22,6 @@ pipelines:
           - echo "Deploying to production environment"
           - pipe: atlassian/ssh-run:0.2.2
             variables:
-              SSH_USER: '<app-user>'
-              SERVER: '<app-server>'
-              COMMAND: '/home/<user>/apps/twitter2telegram/deploy.sh'
+              SSH_USER: '<app_user>'
+              SERVER: '<app_server>'
+              COMMAND: 'cd ~/apps/twitter2telegram && nohup ~/apps/twitter2telegram/deploy.sh &'
