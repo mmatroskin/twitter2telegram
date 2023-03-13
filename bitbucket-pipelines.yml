@@ -3,11 +3,10 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 
-image: atlassian/default-image:3
+image: python:3.10
 
 pipelines:
   default:
-
     # The following deployment steps will be executed for each pipeline run. To configure your steps and conditionally deploy see https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
     - step:
         name: 'Deployment to Staging'
@@ -22,6 +21,6 @@ pipelines:
           - echo "Deploying to production environment"
           - pipe: atlassian/ssh-run:0.2.2
             variables:
-              SSH_USER: '<app_user>'
-              SERVER: '<app_server>'
+              SSH_USER: $app_user
+              SERVER: $app_server
               COMMAND: 'cd ~/apps/twitter2telegram && nohup ~/apps/twitter2telegram/deploy.sh &'
