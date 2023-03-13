@@ -21,6 +21,6 @@ pipelines:
           - echo "Deploying to production environment"
 #          - pipe: atlassian/ssh-run:0.2.2
           - mkdir -p ~/.ssh
-          - $KNOWN_HOSTS >> ~/.ssh/known_hosts
+          - echo $KNOWN_HOSTS > ~/.ssh/known_hosts
           - (umask  077 ; echo $DEPLOY_SSH_KEY | base64 -di > ~/.ssh/id_rsa)
           - ssh -i ~/.ssh/id_rsa $app_user@$app_server 'cd ~/apps/twitter2telegram && nohup ~/apps/twitter2telegram/deploy.sh &'
