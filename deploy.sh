@@ -23,11 +23,7 @@ echo -e '\e[1m\e[34mCloning from source...\e[0m\n'
 
 git checkout release
 
-git fetch origin release
-
-git reset --hard release
-
-git pull
+git pull origin release
 
 echo -e '\e[1m\e[34mActivate virtual environment...\e[0m\n'
 
