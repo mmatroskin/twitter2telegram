@@ -56,23 +56,27 @@ if USE_SENTRY and not SENTRY_URL:
 
 # bot settings
 BOT_TOKEN = getenv('TWEET_BOT_TOKEN')
-# if not BOT_TOKEN:
-#     print('You have forgot to set BOT_TOKEN')
-#     quit()
+if not BOT_TOKEN:
+    print('You have forgot to set TWEET_BOT_TOKEN')
+    quit()
 
 BOT_ADMIN = getenv('BOT_ADMIN')
-# if BOT_ADMIN:
-#     BOT_ADMIN = int(BOT_ADMIN)
-# if not BOT_ADMIN:
-#     print('You have forgot to set BOT_ADMIN')
-#     quit()
+if BOT_ADMIN:
+    BOT_ADMIN = int(BOT_ADMIN)
+if not BOT_ADMIN:
+    print('You have forgot to set BOT_ADMIN')
+    quit()
 
 BOT_NAME = getenv('BOT_NAME')
-# if not BOT_NAME:
-#     print('You have forgot to set BOT_NAME')
-#     quit()
+if not BOT_NAME:
+    print('You have forgot to set BOT_NAME')
+    quit()
 
 TWITTER_TOKEN = getenv('TWITTER_TOKEN')
+if not TWITTER_TOKEN:
+    print('You have forgot to set TWITTER_TOKEN')
+    quit()
+
 MAIN_JS_URL = 'https://abs.twimg.com/responsive-web/client-web/main.e46e1035.js'
 
 # webhook settings
