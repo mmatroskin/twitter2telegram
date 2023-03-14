@@ -1,5 +1,7 @@
 echo -e $PWD
 
+echo -e $SHELL
+
 echo -e '\e[1m\e[34mEntering into app directory...\e[0m\n'
 
 cd ~/apps/twitter2telegram
