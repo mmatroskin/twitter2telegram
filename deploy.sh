@@ -45,4 +45,4 @@ echo $VIRTUAL_ENV
 
 echo -e '\e[1m\e[34mStarting app script...\e[0m\n'
 
-nohup ~/apps/twitter2telegram/start.sh &
+~/apps/twitter2telegram/start.sh > ~/apps/twitter2telegram/nohup.out &
