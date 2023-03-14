@@ -23,4 +23,4 @@ pipelines:
           - mkdir -p ~/.ssh
           - echo $KNOWN_HOSTS > ~/.ssh/known_hosts
           - (umask  077 ; echo $DEPLOY_SSH_KEY | base64 -di > ~/.ssh/id_rsa)
-          - ssh -i ~/.ssh/id_rsa $app_user@$app_server 'cd ~/apps/twitter2telegram && ~/apps/twitter2telegram/deploy.sh > ~/apps/twitter2telegram/deploy.out'
+          - ssh -i ~/.ssh/id_rsa $app_user@$app_server '- echo $USER && cd ~/apps/twitter2telegram && ~/apps/twitter2telegram/deploy.sh > ~/apps/twitter2telegram/deploy.out &'
