@@ -55,7 +55,7 @@ def subscribe(uid: int, username: str) -> bool:
     except RefreshTokenException as exc:
         logger.error(str(exc))
     else:
-        user_id = parser.get_user_id(username)
+        user_id, success = parser.get_user_id(username)
         if user_id:
             data_srv = DataSrv()
             result = data_srv.subscribe(uid, username, user_id)
@@ -81,16 +81,16 @@ def get_tweets(uid: Optional[int], username: Optional[str]) -> Tuple[List[Tweet]
     except RefreshTokenException as exc:
         logger.error(str(exc))
         return None, False
-    target_id = parser.get_user_id(username)
+    target_id, success_get_id = parser.get_user_id(username)
     if not target_id:
         parser.close_session()
-        return None, True
+        return None, success_get_id
     since_id = data_srv.get_last_tweet_for_user(uid, target_id)
-    result = parser.get_tweets(username=username, since_id=since_id, demo=data_srv.is_free_user(uid))
+    result, success = parser.get_tweets(username=username, since_id=since_id, demo=data_srv.is_free_user(uid))
     parser.close_session()
     if result:
         data_srv.save_last_tweet_for_user(uid, target_id, result[-1].id, result[-1].created_at)
-    return result, True
+    return result, success
 
 
 def unsubscribe(uid: int, username: str) -> bool:
