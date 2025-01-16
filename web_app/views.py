@@ -24,6 +24,6 @@ class StateView(BaseView):
         result = self.result.copy()
         result['success'] = True
         result['message'] = MESSAGE_SUCCESS
-        result['data'] = {'bot': True, 'worker':  None}
+        result['data'] = {'bot': None, 'worker':  None}
         response = web.json_response(result)
         return response
