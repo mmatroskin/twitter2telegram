@@ -17,7 +17,6 @@ async def on_startup(dp):
     if USE_WEBHOOK:
         await bot.set_webhook(WEBHOOK_URL)
 
-    # отправить можно только, если диалог с ботом уже был когда - либо начат
     await startup_notify(dp)
 
 

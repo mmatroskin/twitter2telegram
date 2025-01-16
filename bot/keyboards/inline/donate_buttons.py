@@ -7,7 +7,7 @@ def get_keyboard():
         [
             InlineKeyboardButton(
                 url=DONATE_URL,
-                text='Поддержать'),
+                text='Get me a Coffe'),
         ]
     ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=keys)

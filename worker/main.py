@@ -13,6 +13,8 @@ logger = get_logger(join(ROOT_DIR, LOG_FILE), 'worker_app')
 
 
 def main():
+    """Some worker
+    TODO: add scheduled tweets fetching here"""
     logger.info('Starting worker app')
     while True:
         sleep(TIME_OUT)

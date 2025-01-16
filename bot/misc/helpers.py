@@ -55,7 +55,7 @@ def subscribe(uid: int, username: str) -> bool:
     except RefreshTokenException as exc:
         logger.error(str(exc))
     else:
-        user_id = parser.get_user_id(username)
+        user_id, success = parser.get_user_id(username)
         if user_id:
             data_srv = DataSrv()
             result = data_srv.subscribe(uid, username, user_id)
@@ -65,7 +65,7 @@ def subscribe(uid: int, username: str) -> bool:
 
 def get_tweets(uid: Optional[int], username: Optional[str]) -> Tuple[List[Tweet] | None, bool]:
     """
-    Получение N последних твитов
+    Get last N tweets
     Parameters
     ----------
     uid
@@ -81,16 +81,16 @@ def get_tweets(uid: Optional[int], username: Optional[str]) -> Tuple[List[Tweet]
     except RefreshTokenException as exc:
         logger.error(str(exc))
         return None, False
-    target_id = parser.get_user_id(username)
+    target_id, success_get_id = parser.get_user_id(username)
     if not target_id:
         parser.close_session()
-        return None, True
+        return None, success_get_id
     since_id = data_srv.get_last_tweet_for_user(uid, target_id)
-    result = parser.get_tweets(username=username, since_id=since_id, demo=data_srv.is_free_user(uid))
+    result, success = parser.get_tweets(username=username, since_id=since_id, demo=data_srv.is_free_user(uid))
     parser.close_session()
     if result:
         data_srv.save_last_tweet_for_user(uid, target_id, result[-1].id, result[-1].created_at)
-    return result, True
+    return result, success
 
 
 def unsubscribe(uid: int, username: str) -> bool:
@@ -101,33 +101,8 @@ def unsubscribe(uid: int, username: str) -> bool:
 async def send_tweet(message: Message, data: Tweet):
     msg = prepare_msg(data)
 
-    # if len(data.entity_urls) == 1:
-    #     msg += f'{SEP_MSG}{fmt.hide_link(data.entity_urls[0])}'
-    #     msg_with_url = f'{msg}{SEP_MSG}{data.entity_urls[0]}'
-    #     parser = None
-    #     for url in parsers.keys():
-    #         if data.entity_urls[0].find(url) != -1:
-    #             content = await get_data(data.entity_urls[0])
-    #             parser = parsers[url](content) if parsers[url] else None
-    #             break
-    #     if parser:
-    #         media_url, media_type = parser.get_media_data()
-    #         ent = await get_data(media_url) if media_url else None
-    #         if ent:
-    #             name = media_url.split('/')[-1]
-    #             try:
-    #                 file = BytesIO(ent)
-    #                 file.name = name
-    #                 await bot.send_video(message.from_user.id, file, caption=msg, reply_markup=menu)
-    #                 file.close()
-    #                 del file
-    #             except Exception as e:
-    #                 logger.error(str(e), exc_info=False)
-    #                 await send_response(msg_with_url)
-    #             finally:
-    #                 gc.collect()
-    #     else:
-    #         await send_response(message, msg_with_url)
+    #  External sites parsing was removed from here (reason: Not Needed)
+
     if len(data.entity_urls) > 0:
         for item in data.entity_urls:
             msg += f'{SEP_MSG}{item}'
@@ -180,7 +155,6 @@ async def send_tweet(message: Message, data: Tweet):
 
 
 async def send_media(message: Message, item: Media, msg: str):
-    # send media
     empty_msg = f'{msg}{SEP_MSG}Entity: Getting entity error :('
     ent = await get_data(item.media_url) if not item.blob else item.blob
     if ent:
@@ -215,11 +189,6 @@ async def send_media(message: Message, item: Media, msg: str):
 def prepare_msg(data: Tweet):
     msg = f'<b><u>{data.user_name}</u> ({data.created_at.year}-{data.created_at.month}-{data.created_at.day} ' \
           f'{data.created_at.hour}:{data.created_at.minute})</b>:{SEP_MSG}{data.full_text}'
-
-    # if len(data.entity_urls) == 1:
-    #     msg += f'{SEP_MSG}{fmt.hide_link(data.entity_urls[0])}'
-
-    # msg += f'{SEP_MSG}{SEP_MSG}Source: {data.url}'
 
     return msg
 

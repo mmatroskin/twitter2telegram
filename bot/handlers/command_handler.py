@@ -58,17 +58,21 @@ async def process_get_command(message: types.Message):
         else:
             msg = f'{msg_base_list[3].strip()} {msg_base_list[9].strip()} {icons[4].image}'
             msg = msg % username
-        if success and tweets is not None:
+            await message.answer(msg, reply_markup=menu)
+        if not success:
+            msg = msg_base_list[5]
+            await message.answer(msg, reply_markup=menu)
+        elif tweets is not None:
             if not tweets:
-                msg = f'{msg_base_list[3].strip()} {msg_base_list[8].strip()} {icons[2].image}'
+                msg = f'{msg_base_list[8].strip()} {icons[2].image}'
                 msg = msg % username
                 await message.answer(msg, reply_markup=menu)
             else:
                 for item in tweets:
                     await send_tweet(message, item)
         else:
-            if not success:
-                msg = msg_base_list[5]
+            msg = f'{msg_base_list[3].strip()} {msg_base_list[8].strip()} {icons[2].image}'
+            msg = msg % username
             await message.answer(msg, reply_markup=menu)
 
 

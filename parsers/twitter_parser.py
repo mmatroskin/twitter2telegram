@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from os.path import join
 from time import sleep
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from requests import Request, sessions, exceptions
 
@@ -40,7 +40,8 @@ class Parser:
         self._session.close()
 
     def get_tweets(self, rest_id: str = None, username: str = None, exclude_replies: bool = False,
-                   start_time: str = None, count: int = None, since_id: int = None, demo: bool = True) -> List[Tweet]:
+                   start_time: str = None, count: int = None, since_id: int = None,
+                   demo: bool = True) -> Tuple[List[Tweet], bool]:
 
         def tweets_sort(item):
             return item.id
@@ -96,7 +97,7 @@ class Parser:
         result = []
         tweets = self._get_tweets(**params)
         if tweets is None:
-            return result
+            return result, False
         for uid, item in tweets.items():
             if not since_id or uid > since_id:
                 item['user_name'] = username
@@ -111,19 +112,19 @@ class Parser:
             for c, i in enumerate(result):
                 if i.id <= since_id:
                     print(c, i.id, i.url)
-        return result
+        return result, True
 
-    def get_user_id(self, username: str) -> int | None:
+    def get_user_id(self, username: str) -> Tuple[int | None, bool]:
         dct = {'screen_name': username, 'withHighlightedLabel': False}
         route = 'graphql/jMaTS-_Ea8vh9rpKggJbCQ/UserByScreenName?variables=%s' % dict_to_url(dct)
         req = self._session.prepare_request(Request(self._method, f'{self._api_url}/{route}'))
         response = self._session.send(req, allow_redirects=True, timeout=self._timeout)
         if response.status_code != 200:
-            self.logger.error(response.text)
-            return None
+            self.logger.error(f'{req.method}: {req.url} - {response.text}')
+            return None, False
         if response.json().get('errors'):
-            return None
-        return int(response.json()['data']['user']['rest_id'])
+            return None, True
+        return int(response.json()['data']['user']['rest_id']), True
 
     def _get_tweets(self, **kwargs) -> Dict | None:
         # route = f'2/timeline/{rest_id}/tweets'
@@ -134,7 +135,7 @@ class Parser:
         req = self._session.prepare_request(Request(self._method, f'{self._api_url}/{route}', params=kwargs))
         response = self._session.send(req, timeout=self._timeout)
         if response.status_code != 200:
-            self.logger.error(response.reason)
+            self.logger.error(f'{req.method}: {req.url} - response: {response.text}')
             return None
         objects = response.json().get('globalObjects')
         return objects.get('tweets') if objects else {}

@@ -26,7 +26,6 @@ if exists(dotenv_path):
 config = get_config(join(ROOT_DIR, CONFIG))
 
 # parsers settings
-# TARGET = config.get('parsers', 'target')
 DELTA = config.getint('parser', 'min_delta')
 
 WEB_SERVER_ACTIVE = bool(int(getenv('WEB_SERVER_ACTIVE', 0)))
@@ -91,9 +90,6 @@ WEBHOOK_URL = f'{PUBLIC_APP_URL}{WEBHOOK_PATH}' if USE_WEBHOOK else None
 # misc
 DONATE_ENABLED = bool(int(getenv('DONATE_ENABLED', 0)))
 DONATE_URL = getenv('DONATE_URL', '')
-# if not DONATE_URL:
-#     print('You have forgot to set DONATE_URL')
-#     quit()
 
 HELP_QUERY = config.get("misc", "help_query")
 DONATE_QUERY = config.get("misc", "donate_query")
